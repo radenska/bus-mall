@@ -21,6 +21,18 @@ var imgLoc;
 var appearances = [];
 var clickS = [];
 var percent = [];
+var chartDrawn = false;
+var votesChart;
+var data =
+  {
+    labels: imgNames,
+    datasets: [
+      {
+        data: clickS,
+        backgroundColor: 'lightyellow',
+        hoverBackgroundColor: 'blue'
+      }]
+  }
 
 function getNames() {
   for (var i = 0; i < imgFiles.length; i++) {
@@ -174,6 +186,24 @@ function buttHandler (e) {
   e.preventDefault();
   butt.innerHTML = '';
   addResults();
+  renderChart();
+}
+
+function renderChart() {
+  var votes = document.getElementById('votes-chart').getContext('2d');
+  votesChart = new Chart(votes, {
+    type: 'polar area',
+    data: data,
+    options: {
+      responsive: false
+    },
+    scales: [{
+      ticks: {
+        beginAtZero: true
+      },
+    }]
+  }),
+  chartDrawn = true;
 }
 
 getNames();

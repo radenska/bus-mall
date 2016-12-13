@@ -103,3 +103,8 @@ button:hover {
   color: yellow;
   border: 10px solid blue;
 }
+
+#funky-chart {
+  width: 400px;
+  height: 200px;
+}
