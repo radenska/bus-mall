@@ -1,0 +1,43 @@
+body {
+  font-family: arial;
+  text-align: center;
+  position: relative;
+  top: 40px;
+  background-color: lightyellow;
+}
+
+header {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 10px;
+}
+
+section {
+  display: auto;
+  margin: 10px;
+  height: 50px;
+}
+
+table, td {
+  border: 2px solid black;
+}
+
+table {
+  margin: 20px auto;
+}
+
+td {
+  padding: 4px;
+}
+
+ul {
+  list-style: none;
+  margin: 0 auto;
+}
+
+li {
+  display: inline-block;
+  border: 10px solid black;
+  margin: 0 10px;
+  border-collapse: collapse;
+}
