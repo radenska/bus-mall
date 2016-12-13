@@ -176,34 +176,65 @@ alwaysThreePics();
 
 function renderChart() {
   var votes = document.getElementById('votes-chart').getContext('2d');
+  votes.canvas.width = 1000;
+  votes.canvas.height = 600;
   var votesChart = new Chart(votes,{
     type: 'bar',
     data: {
       labels: imgNames,
-      datasets: [{
-        label: '# of votes',
-        data: clickS,
-        backgroundColor: 'green',
-        hoverBackgroundColor: 'blue',
-      }],
+      datasets: [
+        {
+          label: '# of votes',
+          data: clickS,
+          backgroundColor: 'blue'
+        },
+        {
+          label: '# of appearances',
+          data: appearances,
+          backgroundColor: 'green'
+        }
+      ]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
     }
-    // options: {
-    //   scales: {
-    //     yAxes: [{
-    //       ticks: {
-    //         beginAtZero: true
-    //       }
-    //     }]
-    //   }
-    // }
   });
 }
 
+function renderChart2() {
+  var pers = document.getElementById('percent-chart').getContext('2d');
+  pers.canvas.width = 1000;
+  pers.canvas.height = 600;
+  var percentChart = new Chart(pers,{
+    type: 'pie',
+    data: {
+      labels: imgNames,
+      datasets: [
+        {
+          label: '% of times voted (votes/appearances)',
+          data: percent,
+          backgroundColor: ['red', 'slateblue', 'green', 'blue', 'olive', 'orange', 'brown', 'black', 'violet', 'yellow', 'indigo', 'magenta', 'cyan', 'salmon', 'darkkhaki', 'lavender', 'seagreen', 'bisque', 'chocolate', 'darkslategray']
+        }
+      ]
+    },
+    options: {
+      responsive: false,
+    }
+  });
+}
 function buttHandler (e) {
   e.preventDefault();
   butt.innerHTML = '';
   addResults();
   renderChart();
+  renderChart2();
 }
 
 left.addEventListener('click', clickHandler);

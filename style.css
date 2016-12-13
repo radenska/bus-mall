@@ -95,3 +95,7 @@ button:hover {
   color: yellow;
   border: 10px solid blue;
 }
+
+canvas {
+  margin: 0 auto;
+}
