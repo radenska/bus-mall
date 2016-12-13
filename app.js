@@ -35,40 +35,40 @@ function MakeProducts (name, path) {
   // };
 }
 
-function create() {
+function create() { //calls the constructor to make all of the image objects
   for (var i = 0; i < imgFiles.length; i++) {
     products.push(new MakeProducts(imgNames[i], imgFiles[i]));
   }
 }
 
-function displayPic(position, whichSpot, index) {
-  products[index].appearLast = clickTotal + 1;
-  products[index].spot = whichSpot;
-  products[index].numAppearances += 1;
-  elLi = document.createElement('li');
-  elImg = document.createElement('img');
-  elImg.src = products[index].path;
-  elLi.appendChild(elImg);
-  position.appendChild(elLi);
+function displayPic(position, whichSpot, index) { //renders a pic on the screen
+  products[index].appearLast = clickTotal + 1; //appearsLast is used to check if a pic has been used;
+  products[index].spot = whichSpot; //left, right, or center, to compare with what was clicked later;
+  products[index].numAppearances += 1; //keeps track of how many times image has appeared
+  elLi = document.createElement('li'); //create an li element
+  elImg = document.createElement('img'); //create an img element
+  elImg.src = products[index].path; //links image source to img element we created
+  elLi.appendChild(elImg); //attaches img element to li element
+  position.appendChild(elLi); //attaches li element to the proper li location tagged in the html, left, right, or center
 }
 
 function randomNumber() {
-  return Math.floor(Math.random() * imgFiles.length);
+  return Math.floor(Math.random() * imgFiles.length); //returns a random number 0-19
 }
 
-function whichNotToUse () {
+function whichNotToUse () {//recoginzes the three images last used and puts them in an array
   dontUse = [];
   if (clickTotal !== 0) {
     for (var i = 0; i < imgFiles.length; i++) {
       if (products[i].appearLast === clickTotal) {
-        products[i].spot = '';
+        products[i].spot = ''; //this product was in the last turn, so we have to turn its spot back to empty;
         dontUse.push(i);
       }
     }
     console.log('dontUse rest: ' + dontUse);
   }
   else {
-    dontUse = [randomNumber(), randomNumber(), randomNumber()];
+    dontUse = [randomNumber(), randomNumber(), randomNumber()]; //in the first round, no images have been used, so assigns three random ones as used
     console.log('dontUse first: ' + dontUse);
   }
 }
@@ -76,14 +76,14 @@ function whichNotToUse () {
 function compare() {
   do {
     randomNum = randomNumber();
-  } while (dontUse.indexOf(randomNum) !== -1);
-  console.log('randomNum from compare: ');
+  } while (dontUse.indexOf(randomNum) !== -1); //searches through dontUse array to check if this randomNumber can be used
+  console.log('randomNum from compare: ' + randomNum);
   // randomNum = randomNumber();
   // for (var i = 0; i < dontUse.length; i++) {
   //   while (randomNum === dontUse[i]) {
   //     randomNum = randomNumber();
   //   }
-  dontUse.push(randomNum);
+  dontUse.push(randomNum); //randomNum has passed validation (was not used in last turn, has not been picked this turn, so now it can be added to the don't use array)
   console.log('dontuse after compare' + dontUse);
 }
 
@@ -97,7 +97,7 @@ function alwaysThreePics () {
   displayPic(right, 'right', randomNum);
 }
 
-function findImage() {
+function findImage() { //finds the image which was clicked by going through the array of objects and looking for spot, which should match whichImg
   for (var i = 0; i < products.length; i++) {
     if (whichImg === products[i].spot) {
       return i;
@@ -109,7 +109,7 @@ function clickHandler (e) {
   e.preventDefault();
   alert('in the handler!');
   clickTotal += 1;
-  whichImg = e.currentTarget.id;
+  whichImg = e.currentTarget.id; //should return left, right, or center, the id of the EVENT LISTENER
   console.log('whichImg: ' + whichImg);
   var imgLoc = findImage();
   products[imgLoc].clicks += 1;
@@ -119,7 +119,7 @@ function clickHandler (e) {
 getNames();
 create();
 alwaysThreePics();
-// whichThreeLastTime();
-document.addEventListener('click', clickHandler);
+
+left.addEventListener('click', clickHandler);
 center.addEventListener('click', clickHandler);
 right.addEventListener('click', clickHandler);
