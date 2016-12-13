@@ -23,9 +23,9 @@ getNames();
 function MakeProducts (name, path) {
   this.name = name;
   this.path = 'img/' + path;
-  this.clickTotal = 0;
+  this.clicks = 0;
   this.NumAppearances = 0;
-  this.displayedLastTime = false;
+  this.appearLast = 42;
   // this.percent = 0;
 
   // this.calculatePercent = function()
@@ -41,27 +41,41 @@ function create() {
 
 create();
 
-// function appendEl(elContent, table) { //creates and appends an element, relies on global variables
-//   el = document.createElement('td');
-//   el.textContent = elContent;
-//   el2.appendChild(el);
-//   table.appendChild(el2);
-// }
 var elImg;
 var elLi;
+var randomNum;
+var lastThree;
 
-function displayPic(position) {
-  var randomNum = products[Math.floor(Math.random() * imgFiles.length)].path;
+function displayPic(position, index) {
   elLi = document.createElement('li');
   elImg = document.createElement('img');
-  elImg.src = randomNum;
+  elImg.src = products[index].path;
   elLi.appendChild(elImg);
   position.appendChild(elLi);
 }
 
-function alwaysThreePics () {
-  displayPic(left);
-  displayPic(center);
+function randomNumber() {
+  return products[Math.floor(Math.random() * imgFiles.length)].path;
+}
+
+function whichThreeLastTime (obj) {
+  lastThree = [];
+  for (var i = 0; i < imgFiles.length; i++) {
+    if (this[i].appearLast === clickTotal) {
+      lastThree.push(i);
+    }
+  }
+}
+
+function alwaysThreePics (obj) {
+  randomNum = randomNumber();
+  whichThreeLastTime();
+  while (randomNum === lastThree[0] || randomNum === lastThree[1] || randomNum === lastThree[2]) {
+    randomNum = randomNumber();
+  }
+  displayPic(left, randomNum);
+
+displayPic(center);
   displayPic(right);
 }
 
