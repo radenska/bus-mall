@@ -3,19 +3,28 @@ body {
   text-align: center;
   position: relative;
   top: 40px;
-  background-color: lightyellow;
+  background-color: gray;
 }
 
 header {
   font-size: 2em;
   font-weight: bold;
-  margin: 10px;
+  margin: 30px;
+}
+
+header:hover {
+  cursor: not-allowed;
+  background-color: black;
 }
 
 section {
-  display: auto;
+  display: block;
   margin: 10px;
-  height: 50px;
+}
+
+section:hover {
+  cursor: not-allowed;
+  background-color: black;
 }
 
 table, td {
@@ -32,12 +41,65 @@ td {
 
 ul {
   list-style: none;
-  margin: 0 auto;
+  margin: 30px auto;
+  clear:
 }
 
 li {
   display: inline-block;
-  border: 10px solid black;
   margin: 0 10px;
   border-collapse: collapse;
+}
+
+h1 li {
+  color: lightgreen;
+  display: block;;
+  margin: 10px;
+}
+
+ul li {
+  font-size: 24px;
+  text-shadow: 2px 2px 2px black;
+}
+
+.odd {
+  color: yellow;
+}
+
+li img {
+  border: 10px solid black;
+}
+
+li img:hover {
+  border: 10px solid green;
+  transition: 0.35s;
+  cursor: pointer;
+}
+
+li img:click {
+  border: 10px solid green;
+}
+
+.invisible {
+  color: gray;
+  text-shadow: none;
+}
+
+.invisible:hover {
+  color: red;
+  text-shadow: none;
+}
+
+button {
+  font-size: 100px;
+  color: green;
+  height: 200px;
+  width: 600px;
+  transition: 0.35s;
+}
+
+button:hover {
+  cursor: pointer;
+  color: yellow;
+  border: 10px solid blue;
 }
