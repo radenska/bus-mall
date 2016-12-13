@@ -7,8 +7,11 @@ var imgNames = [];
 var left = document.getElementById('left');
 var center = document.getElementById('center');
 var right = document.getElementById('right');
+var results = document.getElementById('results');
 var elImg;
 var elLi;
+var elTd;
+var elTr;
 var randomNum;
 var dontUse;
 var whichImg;
@@ -28,11 +31,6 @@ function MakeProducts (name, path) {
   this.numAppearances = 0;
   this.appearLast = 0;
   this.spot = '';
-  // this.percent = 0;
-
-  // this.calculatePercent = function()
-  //   this.percent = Math.floor((this.clickTotal/this.NumAppearances) * 100);
-  // };
 }
 
 function create() { //calls the constructor to make all of the image objects
@@ -65,11 +63,11 @@ function whichNotToUse () {//recoginzes the three images last used and puts them
         dontUse.push(i);
       }
     }
-    console.log('dontUse rest: ' + dontUse);
+    // console.log('dontUse rest: ' + dontUse);
   }
   else {
     dontUse = [randomNumber(), randomNumber(), randomNumber()]; //in the first round, no images have been used, so assigns three random ones as used
-    console.log('dontUse first: ' + dontUse);
+    // console.log('dontUse first: ' + dontUse);
   }
 }
 
@@ -77,14 +75,9 @@ function compare() {
   do {
     randomNum = randomNumber();
   } while (dontUse.indexOf(randomNum) !== -1); //searches through dontUse array to check if this randomNumber can be used
-  console.log('randomNum from compare: ' + randomNum);
-  // randomNum = randomNumber();
-  // for (var i = 0; i < dontUse.length; i++) {
-  //   while (randomNum === dontUse[i]) {
-  //     randomNum = randomNumber();
-  //   }
+  // console.log('randomNum from compare: ' + randomNum);
   dontUse.push(randomNum); //randomNum has passed validation (was not used in last turn, has not been picked this turn, so now it can be added to the don't use array)
-  console.log('dontuse after compare' + dontUse);
+  // console.log('dontuse after compare' + dontUse);
 }
 
 function alwaysThreePics () {
@@ -105,15 +98,81 @@ function findImage() { //finds the image which was clicked by going through the 
   }
 }
 
+function displayData(array) {
+  for (var i = 0; i < array.length; i++) {
+    elTd= document.createElement('td'); //create a td element
+    elTd.textContent = array[i]; //assign td the value at that spot in the array
+    elTr.appendChild(elTd); //attach td to tr
+    results.appendChild(elTr); //append to results table
+  }
+}
+
+function displayName(type) {
+  elTr = document.createElement('tr');
+  elTd= document.createElement('td'); //create a td element
+  elTd.textContent = type; //assign td the value at that spot in the array
+  elTr.appendChild(elTd); //attach td to tr
+  results.appendChild(elTr);
+}
+
+function extractAppearances() {
+  var appearances = [];
+  for (var i = 0; i < products.length; i++) {
+    appearances.push(products[i].numAppearances);
+  }
+  return appearances;
+}
+
+function extractClicks () {
+  var clickS = [];
+  for (var i = 0; i < products.length; i++) {
+    clickS.push(products[i].clicks);
+  }
+  return clickS;
+}
+
+function percentChosen () {
+  var percent = [];
+  for (var i = 0; i < products.length; i++) {
+    percent.push(Math.floor((products[i].clicks/products[i].numAppearances) * 100));
+  }
+  return percent;
+}
+
+function addResults() {
+  displayName('Image Names');
+  displayData(imgNames);
+  displayName('# of appearances');
+  displayData(extractAppearances());
+  displayName('# of clicks');
+  displayData(extractClicks());
+  displayName('% of time chosen');
+  displayData(percentChosen());
+}
+
 function clickHandler (e) {
   e.preventDefault();
-  alert('in the handler!');
-  clickTotal += 1;
-  whichImg = e.currentTarget.id; //should return left, right, or center, the id of the EVENT LISTENER
-  console.log('whichImg: ' + whichImg);
-  var imgLoc = findImage();
-  products[imgLoc].clicks += 1;
-  console.log('imgLoc: ' + imgLoc);
+  if (clickTotal < 5) {
+    clickTotal += 1;
+    whichImg = e.currentTarget.id; //should return left, right, or center, the id of the EVENT LISTENER
+    // console.log('whichImg: ' + whichImg);
+    var imgLoc = findImage();
+    products[imgLoc].clicks += 1;
+    // console.log('imgLoc: ' + imgLoc);
+    left.innerHTML = '';
+    center.innerHTML = '';
+    right.innerHTML = '';
+    if (clickTotal !== 5) {
+      alwaysThreePics();
+    }
+    else {
+      alert('Congratulations, you have finished the study! Please click the results button to view a summary of your choices.');
+      addResults();
+    }
+  }
+  else {
+    alert('You may no longer vote. Please click the results button to view a summary of your choices!');
+  }
 }
 
 getNames();
