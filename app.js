@@ -138,7 +138,7 @@ function addResults() {
   displayData(percent);
 }
 
-function insertButton() {
+function insertButt() {
   buttEl = document.createElement('button');
   buttText = document.createTextNode('RESULTS');
   buttEl.appendChild(buttText);
@@ -162,13 +162,18 @@ function clickHandler (e) {
     }
     else {
       alert('Congratulations, you have finished the study! Please click the results button to view a summary of your choices.');
-      insertButton();
-      addResults();
+      insertButt();
     }
   }
   else {
     alert('You may no longer vote. Please click the results button to view a summary of your choices!');
   }
+}
+
+function buttHandler (e) {
+  e.preventDefault();
+  butt.innerHTML = '';
+  addResults();
 }
 
 getNames();
@@ -178,3 +183,4 @@ alwaysThreePics();
 left.addEventListener('click', clickHandler);
 center.addEventListener('click', clickHandler);
 right.addEventListener('click', clickHandler);
+butt.addEventListener('click', buttHandler);
