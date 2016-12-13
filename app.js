@@ -7,9 +7,10 @@ var imgNames = [];
 var left = document.getElementById('left');
 var center = document.getElementById('center');
 var right = document.getElementById('right');
-var leftEl;
-var rightEl;
-var centerEl;
+var elImg;
+var elLi;
+var randomNum;
+var dontUse;
 
 function getNames() {
   for (var i = 0; i < imgFiles.length; i++) {
@@ -17,8 +18,6 @@ function getNames() {
     imgNames[i] = tempString.slice(0, (tempString.length - 4));
   }
 }
-
-getNames();
 
 function MakeProducts (name, path) {
   this.name = name;
@@ -39,14 +38,8 @@ function create() {
   }
 }
 
-create();
-
-var elImg;
-var elLi;
-var randomNum;
-var lastThree;
-
 function displayPic(position, index) {
+  products[index].appearLast = clickTotal + 1;
   elLi = document.createElement('li');
   elImg = document.createElement('img');
   elImg.src = products[index].path;
@@ -55,28 +48,38 @@ function displayPic(position, index) {
 }
 
 function randomNumber() {
-  return products[Math.floor(Math.random() * imgFiles.length)].path;
+  return Math.floor(Math.random() * imgFiles.length);
 }
 
-function whichThreeLastTime (obj) {
-  lastThree = [];
+function whichThreeLastTime () {
+  dontUse = [67];
   for (var i = 0; i < imgFiles.length; i++) {
-    if (this[i].appearLast === clickTotal) {
-      lastThree.push(i);
+    if (products[i].appearLast === clickTotal) {
+      dontUse.push(i);
     }
   }
 }
 
-function alwaysThreePics (obj) {
-  randomNum = randomNumber();
-  whichThreeLastTime();
-  while (randomNum === lastThree[0] || randomNum === lastThree[1] || randomNum === lastThree[2]) {
-    randomNum = randomNumber();
+function compare() {
+  for (var i = 0; i < dontUse.length; i++) {
+    do {
+      randomNum = randomNumber();
+    } while (randomNum === dontUse[i]);
   }
-  displayPic(left, randomNum);
-
-displayPic(center);
-  displayPic(right);
+  dontUse.push(randomNum);
 }
 
+function alwaysThreePics () {
+  whichThreeLastTime();
+  compare();
+  displayPic(left, randomNum);
+  compare();
+  displayPic(center, randomNum);
+  compare();
+  displayPic(right, randomNum);
+}
+
+getNames();
+create();
 alwaysThreePics();
+// whichThreeLastTime();
