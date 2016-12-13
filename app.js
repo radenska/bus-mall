@@ -8,19 +8,24 @@ var left = document.getElementById('left');
 var center = document.getElementById('center');
 var right = document.getElementById('right');
 var results = document.getElementById('results');
+var butt = document.getElementById('butt');
 var elImg;
-var elLi;
 var elTd;
 var elTr;
+var buttText;
+var buttEl;
 var randomNum;
 var dontUse;
 var whichImg;
 var imgLoc;
+var appearances = [];
+var clickS = [];
+var percent = [];
 
 function getNames() {
   for (var i = 0; i < imgFiles.length; i++) {
     var tempString = imgFiles[i];
-    imgNames[i] = tempString.slice(0, (tempString.length - 4));
+    imgNames[i] = tempString.slice(0, (tempString.length - 4)); //cut off the .ext from each file to get the name
   }
 }
 
@@ -43,11 +48,9 @@ function displayPic(position, whichSpot, index) { //renders a pic on the screen
   products[index].appearLast = clickTotal + 1; //appearsLast is used to check if a pic has been used;
   products[index].spot = whichSpot; //left, right, or center, to compare with what was clicked later;
   products[index].numAppearances += 1; //keeps track of how many times image has appeared
-  elLi = document.createElement('li'); //create an li element
   elImg = document.createElement('img'); //create an img element
   elImg.src = products[index].path; //links image source to img element we created
-  elLi.appendChild(elImg); //attaches img element to li element
-  position.appendChild(elLi); //attaches li element to the proper li location tagged in the html, left, right, or center
+  position.appendChild(elImg); //attaches img element to the proper li location tagged in the html, left, right, or center
 }
 
 function randomNumber() {
@@ -115,39 +118,31 @@ function displayName(type) {
   results.appendChild(elTr);
 }
 
-function extractAppearances() {
-  var appearances = [];
+function extractData() {//extracts data from objects and puts it into individual arrays until i can figure out the syntax of .forEach
   for (var i = 0; i < products.length; i++) {
     appearances.push(products[i].numAppearances);
-  }
-  return appearances;
-}
-
-function extractClicks () {
-  var clickS = [];
-  for (var i = 0; i < products.length; i++) {
     clickS.push(products[i].clicks);
+    percent.push(Math.floor((clickS[i]/appearances[i]) * 100));
   }
-  return clickS;
-}
-
-function percentChosen () {
-  var percent = [];
-  for (var i = 0; i < products.length; i++) {
-    percent.push(Math.floor((products[i].clicks/products[i].numAppearances) * 100));
-  }
-  return percent;
 }
 
 function addResults() {
+  extractData();
   displayName('Image Names');
   displayData(imgNames);
   displayName('# of appearances');
-  displayData(extractAppearances());
+  displayData(appearances);
   displayName('# of clicks');
-  displayData(extractClicks());
+  displayData(clickS);
   displayName('% of time chosen');
-  displayData(percentChosen());
+  displayData(percent);
+}
+
+function insertButton() {
+  buttEl = document.createElement('button');
+  buttText = document.createTextNode('RESULTS');
+  buttEl.appendChild(buttText);
+  butt.appendChild(buttEl);
 }
 
 function clickHandler (e) {
@@ -167,6 +162,7 @@ function clickHandler (e) {
     }
     else {
       alert('Congratulations, you have finished the study! Please click the results button to view a summary of your choices.');
+      insertButton();
       addResults();
     }
   }
