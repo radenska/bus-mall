@@ -7,6 +7,9 @@ var imgNames = [];
 var left = document.getElementById('left');
 var center = document.getElementById('center');
 var right = document.getElementById('right');
+var leftEl;
+var rightEl;
+var centerEl;
 
 function getNames() {
   for (var i = 0; i < imgFiles.length; i++) {
@@ -38,9 +41,28 @@ function create() {
 
 create();
 
-function alwaysThreePics (obj) {
-  var randomNum = Math.floor(Math.random() * imgFiles.length);
-  console.log(randomNum);
+// function appendEl(elContent, table) { //creates and appends an element, relies on global variables
+//   el = document.createElement('td');
+//   el.textContent = elContent;
+//   el2.appendChild(el);
+//   table.appendChild(el2);
+// }
+var elImg;
+var elLi;
+
+function displayPic(position) {
+  var randomNum = products[Math.floor(Math.random() * imgFiles.length)].path;
+  elLi = document.createElement('li');
+  elImg = document.createElement('img');
+  elImg.src = randomNum;
+  elLi.appendChild(elImg);
+  position.appendChild(elLi);
 }
 
-alwaysThreePics(products);
+function alwaysThreePics () {
+  displayPic(left);
+  displayPic(center);
+  displayPic(right);
+}
+
+alwaysThreePics();
