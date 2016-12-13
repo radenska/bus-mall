@@ -152,7 +152,7 @@ function addResults() {
 
 function clickHandler (e) {
   e.preventDefault();
-  if (clickTotal < 5) {
+  if (clickTotal < 25) {
     clickTotal += 1;
     whichImg = e.currentTarget.id; //should return left, right, or center, the id of the EVENT LISTENER
     // console.log('whichImg: ' + whichImg);
@@ -162,7 +162,7 @@ function clickHandler (e) {
     left.innerHTML = '';
     center.innerHTML = '';
     right.innerHTML = '';
-    if (clickTotal !== 5) {
+    if (clickTotal !== 25) {
       alwaysThreePics();
     }
     else {
