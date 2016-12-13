@@ -21,18 +21,6 @@ var imgLoc;
 var appearances = [];
 var clickS = [];
 var percent = [];
-var chartDrawn = false;
-var votesChart;
-var data =
-  {
-    labels: imgNames,
-    datasets: [
-      {
-        data: clickS,
-        backgroundColor: 'lightyellow',
-        hoverBackgroundColor: 'blue'
-      }]
-  }
 
 function getNames() {
   for (var i = 0; i < imgFiles.length; i++) {
@@ -182,33 +170,41 @@ function clickHandler (e) {
   }
 }
 
+getNames();
+create();
+alwaysThreePics();
+
+function renderChart() {
+  var votes = document.getElementById('votes-chart').getContext('2d');
+  var votesChart = new Chart(votes,{
+    type: 'bar',
+    data: {
+      labels: imgNames,
+      datasets: [{
+        label: '# of votes',
+        data: clickS,
+        backgroundColor: 'green',
+        hoverBackgroundColor: 'blue',
+      }],
+    }
+    // options: {
+    //   scales: {
+    //     yAxes: [{
+    //       ticks: {
+    //         beginAtZero: true
+    //       }
+    //     }]
+    //   }
+    // }
+  });
+}
+
 function buttHandler (e) {
   e.preventDefault();
   butt.innerHTML = '';
   addResults();
   renderChart();
 }
-
-function renderChart() {
-  var votes = document.getElementById('votes-chart').getContext('2d');
-  votesChart = new Chart(votes, {
-    type: 'polar area',
-    data: data,
-    options: {
-      responsive: false
-    },
-    scales: [{
-      ticks: {
-        beginAtZero: true
-      },
-    }]
-  }),
-  chartDrawn = true;
-}
-
-getNames();
-create();
-alwaysThreePics();
 
 left.addEventListener('click', clickHandler);
 center.addEventListener('click', clickHandler);

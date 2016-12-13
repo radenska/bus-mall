@@ -14,7 +14,6 @@ header {
 
 header:hover {
   cursor: not-allowed;
-  background-color: black;
 }
 
 section {
@@ -24,7 +23,10 @@ section {
 
 section:hover {
   cursor: not-allowed;
-  background-color: black;
+}
+
+ul:hover {
+  cursor: not-allowed;
 }
 
 table, td {
@@ -80,16 +82,6 @@ li img:click {
   border: 10px solid green;
 }
 
-.invisible {
-  color: gray;
-  text-shadow: none;
-}
-
-.invisible:hover {
-  color: red;
-  text-shadow: none;
-}
-
 button {
   font-size: 100px;
   color: green;
@@ -102,9 +94,4 @@ button:hover {
   cursor: pointer;
   color: yellow;
   border: 10px solid blue;
-}
-
-#funky-chart {
-  width: 400px;
-  height: 200px;
 }
