@@ -34,11 +34,16 @@ table, td {
 }
 
 table {
-  margin: 20px auto;
+  display: block;
+  margin: 40px auto;
 }
 
 td {
   padding: 4px;
+}
+
+td:hover {
+  background-color: yellow;
 }
 
 ul {
@@ -97,5 +102,10 @@ button:hover {
 }
 
 canvas {
-  margin: 0 auto;
+  margin: 40px auto;
+}
+
+h1 {
+  font-size: 1.5em;
+  color: darkblue;
 }
