@@ -120,10 +120,14 @@ function displayName(type) {
 
 function extractData() {//extracts data from objects and puts it into individual arrays until i can figure out the syntax of .forEach
   for (var i = 0; i < products.length; i++) {
-    appearances.push(products[i].numAppearances);
-    clickS.push(products[i].clicks);
+    appearances[i] = appearances[i] + products[i].numAppearances;
+    clickS[i] = clickS[i] + products[i].clicks;
     percent.push(Math.floor((clickS[i]/appearances[i]) * 100));
   }
+  var stringAppearances = JSON.stringify(appearances);
+  var stringClickS = JSON.stringify(clickS);
+  localStorage.setItem('totalAppearances', stringAppearances);
+  localStorage.setItem('totalClickS', stringClickS);
 }
 
 function addResults() {
@@ -169,10 +173,6 @@ function clickHandler (e) {
     alert('You may no longer vote. Please click the results button to view a summary of your choices!');
   }
 }
-
-getNames();
-create();
-alwaysThreePics();
 
 function renderChart() {
   var votes = document.getElementById('votes-chart').getContext('2d');
@@ -235,6 +235,26 @@ function buttHandler (e) {
   addResults();
   renderChart();
   renderChart2();
+}
+
+if (!localStorage.totalAppearances) {
+  getNames();
+  create();
+  alwaysThreePics();
+} else {
+  var totalAppearances = localStorage.getItem('totalAppearances');
+  console.log(totalAppearances, 'appearances from local storage');
+  var totalClickS = localStorage.getItem('totalClickS');
+  console.log(totalClickS + 'clickS from local storage');
+  totalAppearances = JSON.parse(totalAppearances);
+  totalClickS = JSON.parse(totalClickS);
+  appearances = totalAppearances;
+  console.log(appearances + 'appearances after parsing and assigning from local storage');
+  clickS = totalClickS;
+  console.log(clickS + 'clickS after parsing and assigning from local storage');
+  getNames();
+  create();
+  alwaysThreePics();
 }
 
 left.addEventListener('click', clickHandler);
