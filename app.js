@@ -7,20 +7,16 @@ var imgNames = [];
 var left = document.getElementById('left');
 var center = document.getElementById('center');
 var right = document.getElementById('right');
-var results = document.getElementById('results');
 var butt = document.getElementById('butt');
 var elImg;
-var elTd;
-var elTr;
 var buttText;
 var buttEl;
 var randomNum;
 var dontUse;
-var whichImg;
-var imgLoc;
 var appearances = [];
 var clickS = [];
-var percent = [];
+var tempAppearances;
+var tempClickS;
 
 function getNames() {
   for (var i = 0; i < imgFiles.length; i++) {
@@ -60,17 +56,22 @@ function randomNumber() {
 function whichNotToUse () {//recoginzes the three images last used and puts them in an array
   dontUse = [];
   if (clickTotal !== 0) {
-    for (var i = 0; i < imgFiles.length; i++) {
-      if (products[i].appearLast === clickTotal) {
-        products[i].spot = ''; //this product was in the last turn, so we have to turn its spot back to empty;
-        dontUse.push(i);
+    // for (var i = 0; i < imgFiles.length; i++) {
+    //   if (products[i].appearLast === clickTotal) { //You could do without this variable, and just check if products[i] spot is empty, but you'd have to run three comparisons (right left center) instead of one
+    //     products[i].spot = ''; //this product was in the last turn, so we have to turn its spot back to empty;
+    //     dontUse.push(i);
+    //   }
+    // }
+    products.forEach(function(value, index) {
+      if (value.appearLast === clickTotal) {
+        value.spot = '';
+        dontUse.push(index);
       }
-    }
-    // console.log('dontUse rest: ' + dontUse);
+    })
+    console.log(dontUse);
   }
   else {
     dontUse = [randomNumber(), randomNumber(), randomNumber()]; //in the first round, no images have been used, so assigns three random ones as used
-    // console.log('dontUse first: ' + dontUse);
   }
 }
 
@@ -78,9 +79,7 @@ function compare() {
   do {
     randomNum = randomNumber();
   } while (dontUse.indexOf(randomNum) !== -1); //searches through dontUse array to check if this randomNumber can be used
-  // console.log('randomNum from compare: ' + randomNum);
   dontUse.push(randomNum); //randomNum has passed validation (was not used in last turn, has not been picked this turn, so now it can be added to the don't use array)
-  // console.log('dontuse after compare' + dontUse);
 }
 
 function alwaysThreePics () {
@@ -93,7 +92,7 @@ function alwaysThreePics () {
   displayPic(right, 'right', randomNum);
 }
 
-function findImage() { //finds the image which was clicked by going through the array of objects and looking for spot, which should match whichImg
+function findImage(whichImg) { //finds the image which was clicked by going through the array of objects and looking for spot, which should match whichImg
   for (var i = 0; i < products.length; i++) {
     if (whichImg === products[i].spot) {
       return i;
@@ -101,41 +100,19 @@ function findImage() { //finds the image which was clicked by going through the 
   }
 }
 
-function displayData(array) {
-  for (var i = 0; i < array.length; i++) {
-    elTd= document.createElement('td'); //create a td element
-    elTd.textContent = array[i]; //assign td the value at that spot in the array
-    elTr.appendChild(elTd); //attach td to tr
-    results.appendChild(elTr); //append to results table
-  }
-}
-
-function displayName(type) {
-  elTr = document.createElement('tr');
-  elTd= document.createElement('td'); //create a td element
-  elTd.textContent = type; //assign td the value at that spot in the array
-  elTr.appendChild(elTd); //attach td to tr
-  results.appendChild(elTr);
-}
-
-function extractData() {//extracts data from objects and puts it into individual arrays until i can figure out the syntax of .forEach
+function objectToArrays() {//extracts data from objects and puts it into individual arrays until i can figure out the syntax of .forEach
   for (var i = 0; i < products.length; i++) {
     appearances.push(products[i].numAppearances);
     clickS.push(products[i].clicks);
-    percent.push(Math.floor((clickS[i]/appearances[i]) * 100));
   }
-}
-
-function addResults() {
-  extractData();
-  displayName('Image Names');
-  displayData(imgNames);
-  displayName('# of appearances');
-  displayData(appearances);
-  displayName('# of clicks');
-  displayData(clickS);
-  displayName('% of time chosen');
-  displayData(percent);
+  if (localStorage.totalAppearances) { //I decided only to save the data after every "round" aka 25 clicks
+    tempAppearances = JSON.parse(localStorage.getItem('totalAppearances'));
+    tempClickS = JSON.parse(localStorage.getItem('totalClickS'));
+    for (i = 0; i < imgNames.length; i++) {
+      appearances[i] = appearances[i] + tempAppearances[i];
+      clickS[i] = clickS[i] + tempClickS[i];
+    }
+  }
 }
 
 function insertButt() {
@@ -149,11 +126,7 @@ function clickHandler (e) {
   e.preventDefault();
   if (clickTotal < 25) {
     clickTotal += 1;
-    whichImg = e.currentTarget.id; //should return left, right, or center, the id of the EVENT LISTENER
-    // console.log('whichImg: ' + whichImg);
-    var imgLoc = findImage();
-    products[imgLoc].clicks += 1;
-    // console.log('imgLoc: ' + imgLoc);
+    products[findImage(e.currentTarget.id)].clicks += 1; //currentTarget.id should return left, right, or center, the id of the EVENT LISTENER
     left.innerHTML = '';
     center.innerHTML = '';
     right.innerHTML = '';
@@ -162,6 +135,7 @@ function clickHandler (e) {
     }
     else {
       alert('Congratulations, you have finished the study! Please click the results button to view a summary of your choices.');
+      objectToArrays();
       insertButt();
     }
   }
@@ -170,72 +144,15 @@ function clickHandler (e) {
   }
 }
 
-getNames();
-create();
-alwaysThreePics();
-
-function renderChart() {
-  var votes = document.getElementById('votes-chart').getContext('2d');
-  votes.canvas.width = 1000;
-  votes.canvas.height = 600;
-  var votesChart = new Chart(votes,{
-    type: 'bar',
-    data: {
-      labels: imgNames,
-      datasets: [
-        {
-          label: '# of votes',
-          data: clickS,
-          backgroundColor: 'blue'
-        },
-        {
-          label: '# of appearances',
-          data: appearances,
-          backgroundColor: 'green'
-        }
-      ]
-    },
-    options: {
-      responsive: false,
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
-    }
-  });
-}
-
-function renderChart2() {
-  var pers = document.getElementById('percent-chart').getContext('2d');
-  pers.canvas.width = 1000;
-  pers.canvas.height = 600;
-  var percentChart = new Chart(pers,{
-    type: 'pie',
-    data: {
-      labels: imgNames,
-      datasets: [
-        {
-          label: '% of times voted (votes/appearances)',
-          data: percent,
-          backgroundColor: ['red', 'slateblue', 'green', 'blue', 'olive', 'orange', 'brown', 'black', 'violet', 'yellow', 'indigo', 'magenta', 'cyan', 'salmon', 'darkkhaki', 'lavender', 'seagreen', 'bisque', 'chocolate', 'darkslategray']
-        }
-      ]
-    },
-    options: {
-      responsive: false,
-    }
-  });
-}
 function buttHandler (e) {
   e.preventDefault();
   butt.innerHTML = '';
-  addResults();
-  renderChart();
-  renderChart2();
+  document.location.href = 'results.html';
 }
+
+getNames();
+create();
+alwaysThreePics();
 
 left.addEventListener('click', clickHandler);
 center.addEventListener('click', clickHandler);
