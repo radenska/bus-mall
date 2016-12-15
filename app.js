@@ -56,12 +56,19 @@ function randomNumber() {
 function whichNotToUse () {//recoginzes the three images last used and puts them in an array
   dontUse = [];
   if (clickTotal !== 0) {
-    for (var i = 0; i < imgFiles.length; i++) {
-      if (products[i].appearLast === clickTotal) {
-        products[i].spot = ''; //this product was in the last turn, so we have to turn its spot back to empty;
-        dontUse.push(i);
+    // for (var i = 0; i < imgFiles.length; i++) {
+    //   if (products[i].appearLast === clickTotal) { //You could do without this variable, and just check if products[i] spot is empty, but you'd have to run three comparisons (right left center) instead of one
+    //     products[i].spot = ''; //this product was in the last turn, so we have to turn its spot back to empty;
+    //     dontUse.push(i);
+    //   }
+    // }
+    products.forEach(function(value, index) {
+      if (value.appearLast === clickTotal) {
+        value.spot = '';
+        dontUse.push(index);
       }
-    }
+    })
+    console.log(dontUse);
   }
   else {
     dontUse = [randomNumber(), randomNumber(), randomNumber()]; //in the first round, no images have been used, so assigns three random ones as used
@@ -98,8 +105,6 @@ function objectToArrays() {//extracts data from objects and puts it into individ
     appearances.push(products[i].numAppearances);
     clickS.push(products[i].clicks);
   }
-  console.log('appearances after round: ' + appearances);
-  console.log('appearances after round: ' + clickS);
   if (localStorage.totalAppearances) { //I decided only to save the data after every "round" aka 25 clicks
     tempAppearances = JSON.parse(localStorage.getItem('totalAppearances'));
     tempClickS = JSON.parse(localStorage.getItem('totalClickS'));
@@ -107,13 +112,7 @@ function objectToArrays() {//extracts data from objects and puts it into individ
       appearances[i] = appearances[i] + tempAppearances[i];
       clickS[i] = clickS[i] + tempClickS[i];
     }
-    console.log('appearances after array sum: ' + appearances);
-    console.log('clicks after array sum: ' + clickS);
   }
-  console.log('stringified apps: ' + JSON.stringify(appearances));
-  console.log('stringified clicks: ' + JSON.stringify(clickS));
-  localStorage.setItem('totalAppearances', JSON.stringify(appearances));
-  localStorage.setItem('totalClickS', JSON.stringify(clickS));
 }
 
 function insertButt() {
